@@ -18,7 +18,7 @@ return new class extends Migration
                 ['vehicule_id', 'type', 'numero_plaque', 'date_emission', 'date_expiration', 'serie', 'created_at', 'updated_at'],
                 DB::table('plaques')->select(
                     'vehicule_id',
-                    DB::raw('"plaque"'),
+                    DB::raw("'plaque'"),
                     'numero_plaque',
                     'date_delivrance',
                     'date_expiration',
@@ -36,7 +36,7 @@ return new class extends Migration
                 ['vehicule_id', 'type', 'date_emission', 'date_expiration', 'serie', 'centre_perception', 'created_at', 'updated_at'],
                 DB::table('gestion_immatriculations')->select(
                     'vehicule_id',
-                    DB::raw('"immatriculation"'),
+                    DB::raw("'immatriculation'"),
                     'date_emission',
                     'date_expiration',
                     'serie_plaque',
