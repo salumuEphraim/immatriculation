@@ -84,6 +84,24 @@
             transition: all 0.3s ease;
         }
 
+        .navbar-custom .container,
+        .hero-section > .container,
+        .services-section > .container,
+        .stats-section > .container,
+        .footer-custom > .container {
+            width: 100%;
+            max-width: 1140px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        .navbar-custom .container {
+            display: flex;
+            align-items: center;
+        }
+
         .navbar-brand-custom {
             font-size: 1.5rem;
             font-weight: 800;
@@ -135,9 +153,17 @@
         .hero-content {
             position: relative;
             z-index: 10;
+            max-width: 940px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 925px;
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             backdrop-filter: blur(10px);
@@ -163,7 +189,7 @@
         }
 
         .hero-title {
-            font-size: 4rem;
+            font-size: clamp(2.5rem, 5vw, 4rem);
             font-weight: 900;
             line-height: 1.1;
             margin-bottom: 1.5rem;
@@ -189,6 +215,9 @@
             font-size: 1.25rem;
             color: #94a3b8;
             margin-bottom: 2rem;
+            max-width: 850px;
+            margin-left: auto;
+            margin-right: auto;
             animation: slideUp 0.8s ease-out 0.4s both;
         }
 
