@@ -31,6 +31,7 @@ COPY . .
 COPY --from=assets /app/public/build ./public/build
 
 RUN composer install --no-dev --optimize-autoloader --no-interaction \
+    && rm -f public/hot \
     && chown -R www-data:www-data storage bootstrap/cache \
     && chmod +x docker/render-start.sh
 
