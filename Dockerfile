@@ -4,7 +4,9 @@ WORKDIR /app
 COPY package*.json vite.config.js ./
 COPY resources ./resources
 COPY public ./public
-RUN npm ci && npm run build
+RUN npm ci \
+    && npm run build \
+    && test -f public/build/manifest.json
 
 FROM php:8.2-apache
 
@@ -28,10 +30,11 @@ RUN apt-get update \
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 COPY . .
-COPY --from=assets /app/public/build ./public/build
+COPY --from=assets /app/public/build /var/www/html/public/build
 
 RUN composer install --no-dev --optimize-autoloader --no-interaction \
     && rm -f public/hot \
+    && test -f public/build/manifest.json \
     && chown -R www-data:www-data storage bootstrap/cache \
     && chmod +x docker/render-start.sh
 
