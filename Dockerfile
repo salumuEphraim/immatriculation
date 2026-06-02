@@ -21,8 +21,6 @@ RUN apt-get update \
         libpng-dev \
         libjpeg62-turbo-dev \
         libfreetype6-dev \
-        python3 \
-        python3-venv \
         tesseract-ocr \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j"$(nproc)" pdo_mysql pdo_pgsql zip gd exif bcmath \
@@ -34,10 +32,7 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 COPY . .
 COPY --from=assets /app/public/build /var/www/html/public/build
 
-RUN python3 -m venv /opt/ocr-venv \
-    && /opt/ocr-venv/bin/pip install --upgrade pip \
-    && /opt/ocr-venv/bin/pip install --no-cache-dir -r ocr_service/requirements.txt \
-    && composer install --no-dev --optimize-autoloader --no-interaction \
+RUN composer install --no-dev --optimize-autoloader --no-interaction \
     && rm -f public/hot \
     && test -f public/build/manifest.json \
     && chown -R www-data:www-data storage bootstrap/cache \
