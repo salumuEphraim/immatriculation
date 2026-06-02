@@ -13,12 +13,6 @@ ls -la public/build || true
 ls -la public/build/assets || true
 test -f public/build/manifest.json
 
-echo "Starting OCR Python service..."
-/opt/ocr-venv/bin/python -m uvicorn app:app --host 127.0.0.1 --port 8010 --app-dir ocr_service &
-OCR_PID="$!"
-sleep 3
-echo "OCR Python service started with PID ${OCR_PID}"
-
 php artisan storage:link || true
 php artisan config:cache
 php artisan route:cache
