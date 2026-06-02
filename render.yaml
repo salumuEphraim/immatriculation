@@ -35,6 +35,16 @@ services:
         sync: false
       - key: OPENAI_MODEL
         value: gpt-4o-mini
+      - key: OCR_PYTHON_URL
+        value: http://127.0.0.1:8010/scan-plaque
+      - key: OCR_PYTHON_HEALTH_URL
+        value: http://127.0.0.1:8010/health
+      - key: OCR_PYTHON_TIMEOUT
+        value: 180
+      - key: OCR_PYTHON_CONNECT_TIMEOUT
+        value: 15
+      - key: OCR_PYTHON_USE_OPENAI
+        value: true
       - key: ADMIN_NAME
         sync: false
       - key: ADMIN_EMAIL
