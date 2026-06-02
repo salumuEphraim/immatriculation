@@ -36,9 +36,9 @@ services:
       - key: OPENAI_MODEL
         value: gpt-4o-mini
       - key: OCR_PYTHON_URL
-        value: http://127.0.0.1:8010/scan-plaque
+        sync: false
       - key: OCR_PYTHON_HEALTH_URL
-        value: http://127.0.0.1:8010/health
+        sync: false
       - key: OCR_PYTHON_TIMEOUT
         value: 180
       - key: OCR_PYTHON_CONNECT_TIMEOUT
@@ -51,6 +51,22 @@ services:
         sync: false
       - key: ADMIN_PASSWORD
         sync: false
+
+  - type: web
+    name: roadshield-ocr
+    runtime: python
+    plan: free
+    autoDeploy: true
+    rootDir: ocr_service
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-4o-mini
+      - key: OCR_LANGUAGE
+        value: en
 
 databases:
   - name: roadshield-db

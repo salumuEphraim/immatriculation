@@ -24,3 +24,10 @@ Laravel calls:
 - `GET http://127.0.0.1:8010/health`
 - `POST http://127.0.0.1:8010/scan-plaque` with multipart field `file`
 
+## Render deployment
+
+On Render, deploy this folder as a separate Python web service named for example `roadshield-ocr`.
+Set the Laravel service variable `OCR_PYTHON_URL` to the public URL of that service, for example:
+
+- `https://roadshield-ocr.onrender.com/scan-plaque`
+- `https://roadshield-ocr.onrender.com/health`
