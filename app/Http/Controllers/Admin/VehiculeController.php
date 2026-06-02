@@ -48,20 +48,26 @@ class VehiculeController extends Controller
         $validated = $this->validateVehicule($request);
         $statutReglementaire = Vehicule::computeStatutFromDocuments($validated['documents'] ?? []);
 
-        $vehicule = Vehicule::create([
-            'plaque_immatriculation' => strtoupper(trim(preg_replace('/[^A-Z0-9]/', '', $validated['plaque_immatriculation']))),
-            'vin' => strtoupper(trim($validated['vin'])),
-            'marque' => trim($validated['marque']),
-            'modele' => trim($validated['modele']),
-            'couleur' => trim($validated['couleur']),
-            'proprietaire_id' => $validated['proprietaire_id'],
-            'statut_reglementaire' => $statutReglementaire,
-        ]);
+        try {
+            $vehicule = Vehicule::create([
+                'plaque_immatriculation' => strtoupper(trim(preg_replace('/[^A-Z0-9]/', '', $validated['plaque_immatriculation']))),
+                'vin' => strtoupper(trim($validated['vin'])),
+                'marque' => trim($validated['marque']),
+                'modele' => trim($validated['modele']),
+                'couleur' => trim($validated['couleur']),
+                'proprietaire_id' => $validated['proprietaire_id'],
+                'statut_reglementaire' => $statutReglementaire,
+            ]);
 
-        $this->syncDocuments($vehicule, $validated['documents'] ?? [], $validated['assurance_duration_months'] ?? 12);
+            $this->syncDocuments($vehicule, $validated['documents'] ?? [], $validated['assurance_duration_months'] ?? 12);
 
-        return redirect()->route('admin.vehicules.index')
-            ->with('success', 'Vehicule enregistre avec succes.');
+            return redirect()->route('admin.vehicules.index')
+                ->with('success', 'Vehicule enregistre avec succes.');
+        } catch (\Throwable $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Erreur lors de la creation du vehicule : ' . $e->getMessage());
+        }
     }
 
     public function edit(Vehicule $vehicule): View
@@ -111,11 +117,20 @@ class VehiculeController extends Controller
 
     private function validateVehicule(Request $request, ?Vehicule $vehicule = null): array
     {
-        $vehiculeId = $vehicule?->id;
         $documentKeys = implode(',', array_keys(Vehicule::DOCUMENT_TYPES));
         return $request->validate([
-            'plaque_immatriculation' => 'required|string|max:255|unique:vehicules,plaque_immatriculation,' . $vehiculeId,
-            'vin' => 'required|string|max:255|unique:vehicules,vin,' . $vehiculeId,
+            'plaque_immatriculation' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('vehicules', 'plaque_immatriculation')->ignore($vehicule?->id),
+            ],
+            'vin' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('vehicules', 'vin')->ignore($vehicule?->id),
+            ],
             'marque' => 'required|string|max:255',
             'modele' => 'required|string|max:255',
             'couleur' => 'required|string|max:255',
